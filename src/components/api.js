@@ -182,6 +182,7 @@ export function TfLJourneyPlanner() {
             >
               {lines ? <p style={{}}>{lines} line</p> : ""}
             </div>
+            
 
             {/* This section maps through the different stops of a route leg, and displays it */}
             <div className="legArrivals">
