@@ -1,22 +1,44 @@
+body {
+    background-color: #f4f4f4;
+    /* display: flex; */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .container {
     height:100vh;
+    width:100%;
+    color: #0019a8;
+}
+
+.header { 
+    height:250px;
+    background-color: #0019a8;
+    width:100%;
+}
+
+.logo {
+    width:200px;
+    margin-top:70px;
+    filter: invert(100%) sepia(100%) saturate(100%) hue-rotate(86deg) brightness(118%) contrast(119%);
+
 }
 
 .legContainer {
-    position:relative;
-    top:75px;
+    /* position:relative;
+    top:75px; */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-
-.legArrivals {
+.legArrivals, .stops {
     display:inline-flex;
     flex-direction: column;
     gap:30px;
-    color:blue;
+    color:#0019a8;
     text-align: center;
     list-style: none;
     /* border:1px solid black; */
@@ -32,8 +54,6 @@
     width:100%;
 }
 
-
-
 .lineImage {
     display:flex;
     justify-content: center;
@@ -45,3 +65,47 @@
     border-radius: 40px;
     /* transform: rotate(90deg); */
 }
+
+.resultsContainer {
+    display:block;
+    /* background-color: white; */
+    padding: 20px;
+    border-radius:25px;
+    margin: 0 50px; 
+}
+
+.journeyContainer {
+    padding:20px;
+    background-color: #ffffff;
+    justify-content: center;
+    align-items: center;
+    gap:2rem;
+    margin: 0 50px; 
+    border-radius:25px;
+    position:relative;
+    bottom:50px;
+}
+
+.journeyContainer select {
+    padding:10px;
+    border-radius: 15px;
+    border:none;
+    outline:none;
+    border:1px solid #d7d7d7;
+    margin: 15px;
+    padding: 15px;
+    color: #0019a8;
+
+}
+
+button {
+    height:50px;
+    background-color: #0019a8;
+    color:white;
+    width:150px;
+    border-radius:25px;
+    border:none;
+    cursor:pointer;
+    z-index:999;
+}
+

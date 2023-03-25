@@ -2,6 +2,7 @@ import React from "react";
 import { ReactDOM } from "react";
 import { useState, useEffect } from "react";
 import "../api.css";
+import logo from "../logoTFL.svg";
 
 export function TfLJourneyPlanner() {
   const [from, setFrom] = useState("");
@@ -14,8 +15,8 @@ export function TfLJourneyPlanner() {
   const [lines, setLines] = useState("");
   const [legs, setLegs] = useState([]);
   const [legArrivals, setLegArrivals] = useState([]);
-
- 
+  const [stops, setStops] = useState([])
+  
 
   function getJourney() {
     fetch(
@@ -23,18 +24,23 @@ export function TfLJourneyPlanner() {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log("journeys", data.journeys[0]);
+        // console.log(data.journeys[0].legs);
+        // console.log("clicked");
+
+        setStops(data.journeys[0].legs[0].path.stopPoints)
+
+        console.log(stops)
+        console.log(legs)
+        
 
         setLegs(data.journeys[0].legs);
-        console.log(legs);
 
-      setLegArrivals(legs.map((leg) => leg.arrivalPoint.commonName));
+        // console.log(legArrivals);
 
-        
-        console.log(legArrivals);
+        // console.log(legs);
 
         setLines(data.journeys[0].legs[0].routeOptions[0].name);
-        console.log(lines);
+        // console.log(lines);
 
         setJourneys(data.journeys[0]);
 
@@ -47,13 +53,10 @@ export function TfLJourneyPlanner() {
 
         let departs = data.journeys[0].startDateTime.slice(11, 16);
         journeyDeparts(departs);
-
-          
       });
   }
 
   useEffect(() => {
-    
     fetch(`https://api.tfl.gov.uk/StopPoint/Mode/tube`)
       .then((response) => response.json())
       .then((data) => {
@@ -65,41 +68,56 @@ export function TfLJourneyPlanner() {
       });
   }, []);
 
+  useEffect(() => {
+    setLegArrivals(legs.map((leg) => leg.arrivalPoint.commonName));
+  }, [legs]);
+
   return (
     <div className="container">
-      <select
-        type="text"
-        className="select1"
-        value={from}
-        onChange={(event) => setFrom(event.target.value)}
-      >
-        <option value="">Start of journey</option>
+      <div className="header">
+        <img src={logo} alt="logo" className="logo" />
+      </div>
 
-        {stopPoints.map((station) => (
-          <option key={station}>{station}</option>
-        ))}
-      </select>
+      <div className="journeyContainer">
+          <h2>Plan a journey</h2>
+        <form>
+          <label>From:</label>
+          <select
+            type="text"
+            className="select1"
+            value={from}
+            onChange={(event) => setFrom(event.target.value)}
+          >
+            <option value="">Start of journey</option>
 
-      <p>===</p>
+            {stopPoints.map((station) => (
+              <option key={station}>{station}</option>
+            ))}
+          </select>
 
-      <select
-        type="text"
-        className="select2"
-        value={destination}
-        onChange={(event) => setDestination(event.target.value)}
-      >
-        <option>End of Journey</option>
+          <label>To:</label>
+          <select
+            type="text"
+            className="select2"
+            value={destination}
+            onChange={(event) => setDestination(event.target.value)}
+          >
+            <option>End of Journey</option>
 
-        {stopPoints.map((station) => (
-          <option key={station}>{station}</option>
-        ))}
-      </select>
+            {stopPoints.map((station) => (
+              <option key={station}>{station}</option>
+            ))}
+          </select>
 
-      <button className="submitBtn" onClick={getJourney}>
-        Find journey
-      </button>
+          <button className="submitBtn" onClick={getJourney} type="button">
+            Find journey
+          </button>
+        </form>
+      </div>
 
-      <div className="resultsContainer">
+      <div className="resultsContainer" style={{
+        backgroundColor: departure ? "white" : null
+      }}>
         {departure ? (
           <h3>
             <strong>Result</strong>
@@ -143,58 +161,70 @@ export function TfLJourneyPlanner() {
           ""
         )}
 
-        <div className="legContainer">
-          {arrival ? <h3>Details</h3> : ""}
-          <div className="routeLine">
-            {/* This section updates the color of the line based on the lines state variable value */}
-            <div
-              className="lineImage"
-              style={{
-                backgroundColor:
-                  lines === "Central"
-                    ? "#E32017"
-                    : lines === "Bakerloo"
-                    ? "#B36305"
-                    : lines === "Metropolitan"
-                    ? "#9B0056"
-                    : lines === "Piccadilly"
-                    ? "#003688"
-                    : lines === "Northern"
-                    ? "#000000"
-                    : lines === "District"
-                    ? "#00782A"
-                    : lines === "Jubilee"
-                    ? "#A0A5A9"
-                    : lines === "Victoria"
-                    ? "#0098D4"
-                    : lines === "Circle"
-                    ? "#FFD300	"
-                    : lines === "Elizabeth"
-                    ? "#6950a1"
-                    : lines === "Hammersmith & City"
-                    ? "#F3A9BB"
-                    : lines === "Waterloo & City"
-                    ? "#95CDBA"
-                    : lines === "Chiltern Railways"
-                    ? "rgba(0, 0, 0, 0.5)"
-                    : null,
-              }}
-            >
-              {lines ? <p style={{}}>{lines} line</p> : ""}
-            </div>
-            
+<div className="legContainer">
+        <div className="routeLine">
+          {/* This section updates the color of the line based on the lines state variable value */}
+          <div
+            className="lineImage"
+            style={{
+              backgroundColor:
+                lines === "Central"
+                  ? "#E32017"
+                  : lines === "Bakerloo"
+                  ? "#B36305"
+                  : lines === "Metropolitan"
+                  ? "#9B0056"
+                  : lines === "Piccadilly"
+                  ? "#003688"
+                  : lines === "Northern"
+                  ? "#000000"
+                  : lines === "District"
+                  ? "#00782A"
+                  : lines === "Jubilee"
+                  ? "#A0A5A9"
+                  : lines === "Victoria"
+                  ? "#0098D4"
+                  : lines === "Circle"
+                  ? "#FFD300	"
+                  : lines === "Elizabeth"
+                  ? "#6950a1"
+                  : lines === "Hammersmith & City"
+                  ? "#F3A9BB"
+                  : lines === "Waterloo & City"
+                  ? "#95CDBA"
+                  : lines === "Chiltern Railways"
+                  ? "rgba(0, 0, 0, 0.5)"
+                  : null,
+            }}
+          >
+            {lines ? <p style={{}}>{lines} line</p> : ""}
+          </div>
 
-            {/* This section maps through the different stops of a route leg, and displays it */}
-            <div className="legArrivals">
-              {legArrivals.map((arrival) => (
-                <div key={arrival}>
-                  <li>{arrival}</li>
+          {/* This section maps through the different stops of a route leg, and displays it */}
+
+          {arrival ? <h3>Change at</h3> : ""}
+
+          <div className="legArrivals">
+            {legArrivals.map((arrival) => (
+              <div key={arrival}>
+                <li>{arrival}</li>
+              </div>
+            ))}
+
+            
+          </div>
+          {/* <div className="stops">
+              {departure ? <h3>Stopping at</h3> : null}
+              {stops.map(stop => (
+                <div key={stop}>
+                  <li>{stop.name}</li>
                 </div>
               ))}
-            </div>
-          </div>
+            </div> */}
         </div>
       </div>
+      </div>
+      
     </div>
   );
 }
