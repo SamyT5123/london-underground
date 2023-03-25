@@ -27,10 +27,14 @@ export function TfLJourneyPlanner() {
         // console.log(data.journeys[0].legs);
         // console.log("clicked");
 
+        setJourneys(data.journeys);
+        console.log(journeys)
+
         setStops(data.journeys[0].legs[0].path.stopPoints)
 
-        console.log(stops)
-        console.log(legs)
+        // console.log(stops)
+        // console.log(legs)
+
         
 
         setLegs(data.journeys[0].legs);
@@ -42,7 +46,8 @@ export function TfLJourneyPlanner() {
         setLines(data.journeys[0].legs[0].routeOptions[0].name);
         // console.log(lines);
 
-        setJourneys(data.journeys[0]);
+        
+
 
         let fareTotal = data.journeys[0].fare.totalCost;
         let total = fareTotal / 100;
@@ -118,53 +123,8 @@ export function TfLJourneyPlanner() {
       <div className="resultsContainer" style={{
         backgroundColor: departure ? "white" : null
       }}>
-        {departure ? (
-          <h3>
-            <strong>Result</strong>
-          </h3>
-        ) : (
-          ""
-        )}
 
-        {departure ? (
-          <p>
-            <strong>Departs: </strong>
-            {departure}
-          </p>
-        ) : (
-          ""
-        )}
-
-        {arrival ? (
-          <p>
-            <strong>Arrives: </strong>
-            {arrival}
-          </p>
-        ) : (
-          ""
-        )}
-
-        {journeys.duration ? (
-          <p>
-            <strong>Duration: </strong>
-            {journeys.duration} Mins
-          </p>
-        ) : (
-          ""
-        )}
-
-        {fare ? (
-          <p>
-            <strong>Fare: </strong>£{fare}
-          </p>
-        ) : (
-          ""
-        )}
-
-<div className="legContainer">
-        <div className="routeLine">
-          {/* This section updates the color of the line based on the lines state variable value */}
-          <div
+<div
             className="lineImage"
             style={{
               backgroundColor:
@@ -200,6 +160,25 @@ export function TfLJourneyPlanner() {
             {lines ? <p style={{}}>{lines} line</p> : ""}
           </div>
 
+        
+        {journeys.map(journey => (
+          <div className="journeyResults"><p>
+            <span><b>Departs at:</b> <br/> {journey.startDateTime.slice(11,16)} <br/> <br/> </span>
+            <span><b>Arrives at:</b> <br/> {journey.arrivalDateTime.slice(11,16)} <br/><br/> </span>
+            <span><b>Duration of journey: </b> <br/> {journey.duration} Mins <br/><br/> </span>
+            <span><b>Fare: </b> <br/> £{fare}</span>
+          </p>
+          </div>
+        ))}
+
+
+
+
+<div className="legContainer">
+        <div className="routeLine">
+          {/* This section updates the color of the line based on the lines state variable value */}
+          
+
           {/* This section maps through the different stops of a route leg, and displays it */}
 
           {arrival ? <h3>Change at</h3> : ""}
@@ -213,14 +192,14 @@ export function TfLJourneyPlanner() {
 
             
           </div>
-          {/* <div className="stops">
+          <div className="stops">
               {departure ? <h3>Stopping at</h3> : null}
               {stops.map(stop => (
-                <div key={stop}>
+                <div key={stop.name}>
                   <li>{stop.name}</li>
                 </div>
               ))}
-            </div> */}
+            </div>
         </div>
       </div>
       </div>
