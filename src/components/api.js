@@ -27,37 +27,38 @@ export function TfLJourneyPlanner() {
         // console.log(data.journeys[0].legs);
         // console.log("clicked");
 
-        setJourneys(data.journeys);
-        console.log(journeys)
+        if(data.journeys[0]){
 
-        setStops(data.journeys[0].legs[0].path.stopPoints)
+          setJourneys(data.journeys);
+          console.log(journeys)
 
-        // console.log(stops)
-        // console.log(legs)
+          setStops(data.journeys[0].legs[0].path.stopPoints)
+
+          // console.log(stops)
+          // console.log(legs)
+
+          setLegs(data.journeys[0].legs);
+
+          // console.log(legArrivals);
+
+          // console.log(legs);
+
+          setLines(data.journeys[0].legs[0].routeOptions[0].name);
+          // console.log(lines);
+
+          let fareTotal = data.journeys[0].fare.totalCost;
+          let total = fareTotal / 100;
+          setFare(total.toFixed(2));
+
+          let arrives = data.journeys[0].arrivalDateTime.slice(11, 16);
+          journeyArrives(arrives);
+
+          let departs = data.journeys[0].startDateTime.slice(11, 16);
+          journeyDeparts(departs);
+          
+        }
 
         
-
-        setLegs(data.journeys[0].legs);
-
-        // console.log(legArrivals);
-
-        // console.log(legs);
-
-        setLines(data.journeys[0].legs[0].routeOptions[0].name);
-        // console.log(lines);
-
-        
-
-
-        let fareTotal = data.journeys[0].fare.totalCost;
-        let total = fareTotal / 100;
-        setFare(total.toFixed(2));
-
-        let arrives = data.journeys[0].arrivalDateTime.slice(11, 16);
-        journeyArrives(arrives);
-
-        let departs = data.journeys[0].startDateTime.slice(11, 16);
-        journeyDeparts(departs);
       });
   }
 
@@ -68,6 +69,7 @@ export function TfLJourneyPlanner() {
         const stationNames = data.stopPoints.map((station) => {
           return station.commonName;
         });
+      console.log('stationNames', stationNames);
 
         setStopPoints(Array.from(new Set(stationNames)));
       });
