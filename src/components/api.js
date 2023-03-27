@@ -21,48 +21,50 @@ export function TfLJourneyPlanner() {
   const [stops, setStops] = useState([])
   
 
+  const [loading, setLoading] = useState(false);
+
 
   
 
   function getJourney() {
+    setLoading(true);
     fetch(
       `https://api.tfl.gov.uk/Journey/JourneyResults/${from}/to/${destination}`
     )
       .then((response) => response.json())
       .then((data) => {
         
-
-        setJourneys(data.journeys);
-        // console.log(journeys)
-
-          setStops(data.journeys[0].legs[0].path.stopPoints)
-
-        // console.log(stops)
-        // console.log(legs)
-
-        
-
-          setLegs(data.journeys[0].legs);
-
-          // console.log(legArrivals);
-
-          // console.log(legs);
-
-          setLines(data.journeys[0].legs[0].routeOptions[0].name);
-          // console.log(lines);
-
-          let fareTotal = data.journeys[0].fare.totalCost;
-          let total = fareTotal / 100;
-          setFare(total.toFixed(2));
-
-          let arrives = data.journeys[0].arrivalDateTime.slice(11, 16);
-          journeyArrives(arrives);
-
-          let departs = data.journeys[0].startDateTime.slice(11, 16);
-          journeyDeparts(departs);
+        if(data.journeys[0]) {
+            setJourneys(data.journeys);
+            // console.log(journeys)
+  
+            setStops(data.journeys[0].legs[0].path.stopPoints)
+  
+            // console.log(stops)
+            // console.log(legs)
+  
           
+  
+            setLegs(data.journeys[0].legs);
+  
+            // console.log(legArrivals);
+  
+            // console.log(legs);
+  
+            setLines(data.journeys[0].legs[0].routeOptions[0].name);
+            // console.log(lines);
+  
+            let fareTotal = data.journeys[0].fare.totalCost;
+            let total = fareTotal / 100;
+            setFare(total.toFixed(2));
+  
+            let arrives = data.journeys[0].arrivalDateTime.slice(11, 16);
+            journeyArrives(arrives);
+  
+            let departs = data.journeys[0].startDateTime.slice(11, 16);
+            journeyDeparts(departs);
         }
-
+        setLoading(false);
         
       });
   }
@@ -128,6 +130,7 @@ export function TfLJourneyPlanner() {
           <button className="submitBtn" onClick={getJourney} type="button">
             Find journey
           </button>
+          {loading && <p>Loading...</p>}
         </form>
       </div>
 
@@ -228,11 +231,32 @@ export function TfLJourneyPlanner() {
           {arrival ? <h3>Change at</h3> : ""}
 
           <div className="legArrivals">
-            {legArrivals.map((arrival) => (
-              <div key={arrival}>
-                <li>{arrival}</li>
-              </div>
-            ))}
+            {
+            legs.map((leg) => {
+              console.log(leg.arrivalPoint.commonName);
+              const arrivalPoint = leg.arrivalPoint.commonName;
+              const stopPoints = leg.path.stopPoints;
+              return(
+                <div key={arrivalPoint}>
+                  {
+                    stopPoints.map((stop, i)=>{
+                      console.log('stopXYZ',stop);
+                      if(stop.name !== arrivalPoint){
+                        return (
+                          <li key={i}>{stop.name}</li>
+                        )
+                      } else {
+                        return;
+                      }
+                      
+                    })
+                  }
+                  <li><b>{arrivalPoint}</b></li>
+                </div>
+              )
+            })
+            }
+            
 
             
           </div>
